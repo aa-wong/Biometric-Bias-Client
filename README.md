@@ -16,6 +16,10 @@ http://localhost:3000
 # Folder Structure
 ```bash
 app
+  |# Server
+  |_index.js
+  |# Dev Server
+  |_server.js
   |# Site Folder
   |_public
     |# OpenCV Files
@@ -34,8 +38,4 @@ app
       |_tracking-min.js
     |# Main Website HTML file
     |_index.html
-  |# Server
-  |_index.js
-  |# Dev Server
-  |_server.js
 ```
