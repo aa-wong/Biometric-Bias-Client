@@ -19,6 +19,7 @@ app
   |_index.js # Server
   |_server.js # Dev Server
   |_public # Site Folder
+    |_index.html # Main Website HTML file
     |_assets # OpenCV Files
     |_css # Style Files
     |_data # Data Files
@@ -26,5 +27,4 @@ app
     |_js # Javascript implementation files
       |_main.js # Main app implementation file
       |_tracking-min.js # video tracking file
-    |_index.html # Main Website HTML file
 ```
