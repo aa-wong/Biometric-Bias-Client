@@ -141,5 +141,6 @@ App.prototype = {
       const imageUrl = canvas.toDataURL('image/png')
     }
     image.src = imgSrc
+    
   }
 }
