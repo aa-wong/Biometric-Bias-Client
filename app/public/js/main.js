@@ -33,7 +33,7 @@ App.prototype = {
    * @param  {[type]} rect Face Rect
    * @return {[type]}      [description]
    */
-  drawFrame: function(rect){
+  drawFrame: function(rect) {
     const context = this.context
     // Apply canvas to rect vallues
     context.strokeStyle = '#a64ceb'
@@ -42,5 +42,5 @@ App.prototype = {
     context.fillStyle = "#fff"
     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11)
     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
-  }
+  },
 }
