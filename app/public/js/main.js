@@ -1,9 +1,9 @@
 function App() {
   this.video = document.getElementById('video')
   this.canvas = document.getElementById('canvas')
-  this.ctx = this.canvas.getContext('2d')
-  this.padding = 100
-  this.imageResolution = [300, 300]
+  this.tracker = new tracking.ObjectTracker('face')
+  this.context = this.canvas.getContext('2d')
+  // this.gui = new dat.GUI()
 }
 
 App.prototype = {
@@ -12,9 +12,8 @@ App.prototype = {
    * @return {[type]} [description]
    */
   init: function() {
-    const tracker = new tracking.ObjectTracker('face')
-    const ctx = this.ctx
-    const padding = this.padding
+    const tracker = this.tracker
+    const context = this.context
 
     // Set the initial scale, steps and density values
     tracker.setInitialScale(4)
@@ -24,16 +23,8 @@ App.prototype = {
     tracking.track('#video', tracker, { camera: true })
     tracker.on('track', (event) => {
       // Reset canvas frame
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      event.data.forEach(rect => {
-        const { x, y, width, height } = rect
-        this.drawFrame({
-          x: x - (padding / 2),
-          y: y - (padding / 2),
-          width: width + padding,
-          height: height + padding
-        })
-      })
+      context.clearRect(0, 0, canvas.width, canvas.height)
+      event.data.forEach(rect => this.drawFrame(rect))
     })
   },
 
@@ -42,8 +33,8 @@ App.prototype = {
    * @param  {[type]} rect Face Rect
    * @return {[type]}      [description]
    */
-  drawFrame: function(rect) {
-    const ctx = this.ctx
+  drawFrame: function(rect){
+    const context = this.context
     // Apply canvas to rect vallues
     ctx.strokeStyle = '#a64ceb'
     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
@@ -141,6 +132,5 @@ App.prototype = {
       const imageUrl = canvas.toDataURL('image/png')
     }
     image.src = imgSrc
-
   }
 }
