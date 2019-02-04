@@ -7,7 +7,7 @@ The Biometric Bias an art piece that aims to question the viewer's trust in soci
 # Install server
 $ npm install
 # Start development server
-$ npm run dev
+$ npm run watch
 ```
 Server runs on port 3000,
 
