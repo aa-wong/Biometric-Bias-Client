@@ -39,8 +39,10 @@ video, canvas {
 .btn {
   border: none;
   cursor: pointer;
-  background-image: url(/assets/btn-take-photo.svg) center no-repeat;
+  background-image: url(/assets/btn-take-photo.svg);
   height: 65px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Darker background on mouse-over */
