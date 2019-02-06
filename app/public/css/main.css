@@ -23,7 +23,6 @@ html, body {
 
 .row_video {
   flex: 8;
-  position: relative;
 }
 
 .row_button {
