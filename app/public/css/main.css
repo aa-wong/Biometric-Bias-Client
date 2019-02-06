@@ -1,5 +1,52 @@
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.row_logo {
+  flex: 1;
+}
+
+.row_video {
+  flex: 8;
+  position: relative;
+}
+
+.row_button {
+  flex: 1;
+}
+
 video, canvas {
-  margin-left: 300px;
-  margin-top: 50px;
   position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  background-image: url("assets/btn-take-photo.svg");
+  height: 65px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
 }
