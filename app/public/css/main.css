@@ -10,6 +10,10 @@ body {
   text-align: center;
 }
 
+
+
+/* ----- FLEXBOX RESPONSIVE STRUCTURE ----- */
+
 .row_middle {
   display: flex;
   flex: 1;
@@ -42,6 +46,10 @@ body {
   justify-content: center;
 }
 
+
+
+/* ----- PAGE ELEMENTS ----- */
+
 video, canvas {
   position: absolute;
   left: 50%;
@@ -52,19 +60,26 @@ video, canvas {
 .btn {
   border: none;
   cursor: pointer;
-  /*background-image: url(/images/btn-camera.svg);*/
-  background-image: url(/images/btn-close.svg);
+  background-image: url(/images/btn-camera.svg);
+  /*background-image: url(/images/btn-close.svg);*/
   height: 100px;
   width: 100px;
   background-position: center;
   background-repeat: no-repeat;
   background-color: unset;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
 }
 
 .btn:hover {
   opacity: 0.5;
-  background-color: unset;
 }
+
+
+
+/* ----- TYPOGRAPHY ----- */
 
 h1, h2, p.data {
   font-family: sans-serif;
@@ -82,6 +97,7 @@ h2 {
   font-size: 1em;
   margin-bottom: 0.5em;
 }
+
 p.data {
   font-size: 2.5em;
   margin-bottom: 1.5em;
