@@ -124,7 +124,7 @@ App.prototype = {
     // create image object
     const image = new Image()
 
-    image.onload = function() {
+    image.onload = () => {
       // Use canvas to resize the image
       const canvas = document.createElement('canvas')
   		const ctx = canvas.getContext("2d")
@@ -139,7 +139,55 @@ App.prototype = {
 
       // final iamge result
       const imageUrl = canvas.toDataURL('image/png')
+      // const img = imageSerializer(imageUrl)
+      // console.log(img)
+      const img = new Image()
+      img.src = imageUrl
+      this.predict(img)
     }
     image.src = imgSrc
+  },
+
+  predict: async function(img) {
+    const model = await tf.loadModel('/models/gender_model/model.json')
+    const meanImageNetRGB = tf.tensor1d([123.68,116.779,103.939])
+    const tensor = tf.fromPixels(img)
+                    .resizeNearestNeighbor([224, 224])
+                    .toFloat()
+                    .sub(meanImageNetRGB)
+                    .reverse(2)
+                    .expandDims()
+
+    const prediction = await model.predict(tensor).data()
+    const label = ['male', 'female']
+    label.forEach((label, i) => console.info(label, prediction[i] * 100))
+  },
+}
+
+function imageSerializer(imageUrl) {
+  // Split the base64 string in data and contentType
+  const block = imageUrl.split(";")
+  // Get the content type of the image
+  const contentType = block[0].split(":")[1]// In this case "image/gif"
+  // get the real base64 content of the file
+  const realData = block[1].split(",")[1]// In this case "R0lGODlhPQBEAPeoAJosM...."
+  // Convert it to a blob to upload
+  return b64toBlob(realData, contentType)
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || ''
+  sliceSize = sliceSize || 512
+  const byteCharacters = atob(b64Data)
+  const byteArrays = []
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize)
+    const byteNumbers = new Array(slice.length)
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i)
+    }
+    const byteArray = new Uint8Array(byteNumbers)
+    byteArrays.push(byteArray)
   }
+  return new Blob(byteArrays, {type: contentType})
 }
