@@ -1,32 +1,45 @@
-html, body {
-  height: 100vh;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   margin: 0;
-  padding: 0;
   text-align: center;
 }
 
-.container {
-  min-height: 100%;
+.row_middle {
   display: flex;
-  flex-direction: column;
+  flex: 1;
 }
 
-.container > div {
+.row_middle > .column_middle {
+  flex: 1;
+}
+
+.row_middle > div.column_left, .row_middle > div.column_right {
+  flex: 0 0 20vw;
+}
+
+.row_middle > div.column_left {
+  order: -1;
+}
+
+.row_top, .row_bottom {
+  height: 15vh;
+  display: flex;
+}
+
+.row_top, .row_bottom, .column_middle, .column_left, .column_right {
+  padding: 1em;
+}
+
+.row_top, .row_bottom, .column_left, .column_right {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.row_logo {
-  flex: 1;
-}
-
-.row_video {
-  flex: 8;
-}
-
-.row_button {
-  flex: 1;
 }
 
 video, canvas {
@@ -39,13 +52,36 @@ video, canvas {
 .btn {
   border: none;
   cursor: pointer;
-  background-image: url(/images/btn-take-photo.svg);
+  background-image: url(/images/btn-camera.svg);
   height: 65px;
+  width: 65px;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #fff;
+  background-color: unset;
 }
 
 .btn:hover {
-  background-color: #fff;
+  opacity: 0.5;
+  background-color: unset;
+}
+
+h1, h2, p.data {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+h1, h2 {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+p.data {
+  font-size: 2.5em;
+  margin-bottom: 1.5em;
+}
+
+p.data > sup {
+  font-size: 0.5em;
 }

@@ -11,18 +11,38 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row_logo">
-            <p>Biometric Bias logo goes here.</p>
-        </div>
-        <div class="row_video">
+    <div class="row_top"><h1>BIOMTERIC BIAS</h1></div>
+
+    <div class="row_middle">
+        <div class="column_middle">
             <video id="video" width="700" height="700" preload autoplay loop muted></video>
             <canvas id="canvas" width="700" height="700"></canvas>
         </div>
-        <div class="row_button">
-            <button class="btn"></button>
+        <div class="column_left">
+            <h2>GENDER</h2>
+            <p class="data">M/F</p>
+
+            <h2>ATTRACTIVE</h2>
+            <p class="data">00.0<sup>%</sup></p>
+
+            <h2>HAPPY</h2>
+            <p class="data">00.0<sup>%</sup></p>
+        </div>
+
+        <div class="column_right">
+            <h2>TRUSTWORTHY</h2>
+            <p class="data">00.0<sup>%</sup></p>
+
+            <h2>THREATENING</h2>
+            <p class="data">00.0<sup>%</sup></p>
+
+            <h2>DEPRESSED</h2>
+            <p class="data">00.0<sup>%</sup></p>
         </div>
     </div>
+
+    <div class="row_bottom"><p><button class="btn"></button></p></div>
+
 
     <script>
       window.onload = () => {
