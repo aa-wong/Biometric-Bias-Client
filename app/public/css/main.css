@@ -52,9 +52,10 @@ video, canvas {
 .btn {
   border: none;
   cursor: pointer;
-  background-image: url(/images/btn-camera2.svg);
-  height: 65px;
-  width: 65px;
+  /*background-image: url(/images/btn-camera.svg);*/
+  background-image: url(/images/btn-close.svg);
+  height: 100px;
+  width: 100px;
   background-position: center;
   background-repeat: no-repeat;
   background-color: unset;
@@ -70,13 +71,17 @@ h1, h2, p.data {
   margin: 0;
   padding: 0;
   line-height: 1;
+  letter-spacing: 0.5px;
 }
 
-h1, h2 {
+h1 {
+  font-size: 1.2em;
+}
+
+h2 {
   font-size: 1em;
   margin-bottom: 0.5em;
 }
-
 p.data {
   font-size: 2.5em;
   margin-bottom: 1.5em;
