@@ -1,9 +1,13 @@
-function App() {
+function App(http) {
   this.video = document.getElementById('video')
   this.canvas = document.getElementById('canvas')
   this.ctx = this.canvas.getContext('2d')
-  this.padding = 100
+  this.padding = 150
   this.imageResolution = [300, 300]
+  this.modelNames = [
+    'gender',
+    // 'threatening'
+  ]
 }
 
 App.prototype = {
@@ -11,7 +15,40 @@ App.prototype = {
    * Initialize the Facial Tracker
    * @return {[type]} [description]
    */
-  init: function() {
+  init: function(http) {
+    this.http = http
+    this.loadModels()
+    .then(models => {
+      this.models = models
+      console.log(this.models)
+      this.startTracking()
+    })
+    .catch(err => console.error('Load models Error ::', err))
+  },
+
+  loadModels: function() {
+    return new Promise((resolve, reject) => {
+      Promise.all(this.modelNames.map(name => {
+        return Promise.all([
+          name,
+          tf.loadModel(`/models/${name}/model.json`),
+          this.http.GET(`/models/${name}/classifiers.json`)
+        ])
+      }))
+      .then(models => {
+        resolve(models.map((modelObj) => {
+          return {
+            name: modelObj[0],
+            model: modelObj[1],
+            classifers: JSON.parse(modelObj[2])
+          }
+        }))
+      })
+      .catch(err => reject('Load Models Error :: ' + err))
+    })
+  },
+
+  startTracking: function() {
     const tracker = new tracking.ObjectTracker('face')
     const ctx = this.ctx
     const padding = this.padding
@@ -51,7 +88,7 @@ App.prototype = {
     ctx.fillStyle = "#fff"
     ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11)
     ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
-    this.cropImage(rect)
+    this.processImageWithRect(rect)
   },
 
   /**
@@ -59,17 +96,11 @@ App.prototype = {
    * @param  {[type]} crop [description]
    * @return {[type]}      [description]
    */
-  cropImage: function(crop) {
+  processImageWithRect: function(frame) {
     // Get Video Frame
-    const frame = this.videoFrame()
-    // Extract crop values
-    const { x, y, width, height } = crop
-    // Crop the image frame with crop size
-    const imgData = frame.getImageData(x, y, width, height)
-    // copy the image
-    const imageUrl = this.cropCopy(imgData, width, height)
-    // resize the image
-    this.resizeImage(imageUrl)
+    const videoFrame = this.videoFrame()
+    // Load image from img src
+    this.predict(videoFrame, frame)
   },
 
   /**
@@ -90,104 +121,66 @@ App.prototype = {
     const frameCtx = frameCanvas.getContext('2d')
     // Snap an image frame from the video
     frameCtx.drawImage(video, 0, 0, vw, vh)
-    return frameCtx
+    return frameCanvas.toDataURL()
   },
 
-  /**
-   * [description]
-   * @param  {[type]} imgData [description]
-   * @param  {[type]} width   [description]
-   * @param  {[type]} height  [description]
-   * @return {[type]}         [description]
-   */
-  cropCopy: function(imgData, width, height) {
-    // Create a canvas for the crop image
-    const cropCanvas = document.createElement('canvas')
-    // Set size
-    cropCanvas.width = width
-    cropCanvas.height = height
-    const cropCtx = cropCanvas.getContext('2d')
-    // Apply the image data
-    cropCtx.putImageData(imgData, 0, 0)
-    // Return the src url
-    return cropCanvas.toDataURL("image/png")
+  loadAndProcessImg: function(img, frame) {
+    // const croppedImg = this.cropImage(img, frame)
+    const resizedImg = this.resizeImage(img)
+    const batchedImg = this.batchImage(resizedImg)
+    return batchedImg
   },
 
-  /**
-   * Resize Image
-   * @param  {[type]} imgSrc [description]
-   * @return {[type]}        [description]
-   */
-  resizeImage: function(imgSrc) {
-    // Extract defined image resolution
-    const [w, h] = this.imageResolution
-    // create image object
-    const image = new Image()
-
-    image.onload = () => {
-      // Use canvas to resize the image
-      const canvas = document.createElement('canvas')
-  		const ctx = canvas.getContext("2d")
-      // apply the image resolution
-  		ctx.clearRect(0, 0, w, h)
-      image.width = w
-      image.height = h
-  		canvas.width = image.width
-  		canvas.height = image.height
-      // Draw the image to the new resolution
-  		ctx.drawImage(image, 0, 0, image.width, image.height)
-
-      // final iamge result
-      const imageUrl = canvas.toDataURL('image/png')
-      // const img = imageSerializer(imageUrl)
-      // console.log(img)
+  loadImage: async function(src) {
+    return new Promise((resolve, reject) => {
       const img = new Image()
-      img.src = imageUrl
-      this.predict(img)
-    }
-    image.src = imgSrc
+      img.src = src
+      img.onload = () => resolve(tf.fromPixels(img))
+      img.onerror = (e) => reject(e)
+    })
   },
 
-  predict: async function(img) {
-    const model = await tf.loadModel('/models/gender_model/model.json')
-    const meanImageNetRGB = tf.tensor1d([123.68,116.779,103.939])
-    const tensor = tf.fromPixels(img)
-                    .resizeNearestNeighbor([224, 224])
-                    .toFloat()
-                    .sub(meanImageNetRGB)
-                    .reverse(2)
-                    .expandDims()
-
-    const prediction = await model.predict(tensor).data()
-    const label = ['male', 'female']
-    label.forEach((label, i) => console.info(label, prediction[i] * 100))
+  cropImage: function(img, frame) {
+    // Extract crop values
+    const {
+      x,
+      y,
+      width,
+      height
+    } = frame
+    return img.slice([x, y, 0], [width, height, 3])
   },
-}
 
-function imageSerializer(imageUrl) {
-  // Split the base64 string in data and contentType
-  const block = imageUrl.split(";")
-  // Get the content type of the image
-  const contentType = block[0].split(":")[1]// In this case "image/gif"
-  // get the real base64 content of the file
-  const realData = block[1].split(",")[1]// In this case "R0lGODlhPQBEAPeoAJosM...."
-  // Convert it to a blob to upload
-  return b64toBlob(realData, contentType)
-}
+  resizeImage: function(image) {
+    return tf.image.resizeBilinear(image, [224, 224])
+  },
 
-function b64toBlob(b64Data, contentType, sliceSize) {
-  contentType = contentType || ''
-  sliceSize = sliceSize || 512
-  const byteCharacters = atob(b64Data)
-  const byteArrays = []
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize)
-    const byteNumbers = new Array(slice.length)
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i)
-    }
-    const byteArray = new Uint8Array(byteNumbers)
-    byteArrays.push(byteArray)
-  }
-  return new Blob(byteArrays, {type: contentType})
+  batchImage: function(image) {
+    // Expand our tensor to have an additional dimension, whose size is 1
+    const batchedImage = image.expandDims(0)
+    // Turn pixel data into a float between -1 and 1.
+    return batchedImage.toFloat().div(tf.scalar(127)).sub(tf.scalar(1))
+  },
+
+  predict: async function(imgSrc, frame) {
+    this.loadImage(imgSrc).then(img => {
+      const processedImg = this.loadAndProcessImg(img, frame)
+      this.models.forEach(ml => {
+        const {
+          name,
+          model,
+          classifers
+        } = ml
+
+        model.predict(processedImg).data()
+        .then(prediction => {
+          const confidence = Math.max(...prediction)
+          const index = prediction.indexOf(confidence)
+          document.getElementById(name).innerHTML = classifers[index]
+        })
+        .catch(err => console.error('prediction error ::', err))
+      })
+    })
+    .catch(err => console.error('Load Image Error ::', err))
+  },
 }

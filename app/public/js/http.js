@@ -1,17 +1,12 @@
-function Http() {}
+function Http() {
+  this.request = new XMLHttpRequest()
+}
 
 Http.prototype = {
-  /**
-   * Initialize the Facial Tracker
-   * @return {[type]} [description]
-   */
-  init: function() {
-    this.request = new XMLHttpRequest()
-  },
-
   GET: function(url) {
     return new Promise((resolve, reject) => {
       const xhr = this.request
+      xhr.overrideMimeType("application/json")
       xhr.open('GET', url)
       xhr.timeout = 3000
       xhr.onload = (e) => {
@@ -21,10 +16,7 @@ Http.prototype = {
           else reject(xhr.statusText)
         }
       }
-
-      xhr.onerror = (e) => {
-        reject(xhr.statusText)
-      }
+      xhr.onerror = (e) => reject(xhr.statusText)
       xhr.send()
     })
   }

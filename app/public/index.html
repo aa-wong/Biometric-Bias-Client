@@ -17,12 +17,13 @@
 
     <div class="row_middle">
         <div class="column_middle">
-            <video id="video" width="700" height="700" preload autoplay loop muted></video>
-            <canvas id="canvas" width="700" height="700"></canvas>
+          <video id="video" width="700" height="700" preload autoplay loop muted></video>
+          <canvas id="canvas" width="700" height="700"></canvas>
         </div>
         <div class="column_left">
+          <img id="y" />
             <h2>GENDER</h2>
-            <p class="data">M/F</p>
+            <p class="data" id="gender">M/F</p>
 
             <h2>ATTRACTIVE</h2>
             <p class="data">00.0<sup>%</sup></p>
@@ -36,7 +37,7 @@
             <p class="data">00.0<sup>%</sup></p>
 
             <h2>THREATENING</h2>
-            <p class="data">00.0<sup>%</sup></p>
+            <p class="data" id="threatening">00.0<sup>%</sup></p>
 
             <h2>DEPRESSED</h2>
             <p class="data">00.0<sup>%</sup></p>
@@ -49,7 +50,8 @@
     <script>
       window.onload = () => {
         const app = window.app = new App()
-        app.init()
+        const http = window.http = new Http()
+        app.init(http)
       }
     </script>
 </body>
