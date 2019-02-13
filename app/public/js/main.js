@@ -5,8 +5,7 @@ function App(http) {
   this.padding = 150
   this.imageResolution = [300, 300]
   this.modelNames = [
-    'gender',
-    // 'threatening'
+    'multi-class',
   ]
 }
 
@@ -20,7 +19,6 @@ App.prototype = {
     this.loadModels()
     .then(models => {
       this.models = models
-      console.log(this.models)
       this.startTracking()
     })
     .catch(err => console.error('Load models Error ::', err))
@@ -88,7 +86,10 @@ App.prototype = {
     ctx.fillStyle = "#fff"
     ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11)
     ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
-    this.processImageWithRect(rect)
+  },
+
+  execute: function() {
+    this.processImageWithRect()
   },
 
   /**
@@ -96,11 +97,11 @@ App.prototype = {
    * @param  {[type]} crop [description]
    * @return {[type]}      [description]
    */
-  processImageWithRect: function(frame) {
+  processImageWithRect: function() {
     // Get Video Frame
     const videoFrame = this.videoFrame()
     // Load image from img src
-    this.predict(videoFrame, frame)
+    this.predict(videoFrame)
   },
 
   /**
@@ -124,7 +125,7 @@ App.prototype = {
     return frameCanvas.toDataURL()
   },
 
-  loadAndProcessImg: function(img, frame) {
+  loadAndProcessImg: function(img) {
     // const croppedImg = this.cropImage(img, frame)
     const resizedImg = this.resizeImage(img)
     const batchedImg = this.batchImage(resizedImg)
@@ -162,9 +163,9 @@ App.prototype = {
     return batchedImage.toFloat().div(tf.scalar(127)).sub(tf.scalar(1))
   },
 
-  predict: async function(imgSrc, frame) {
+  predict: async function(imgSrc) {
     this.loadImage(imgSrc).then(img => {
-      const processedImg = this.loadAndProcessImg(img, frame)
+      const processedImg = this.loadAndProcessImg(img)
       this.models.forEach(ml => {
         const {
           name,
@@ -174,9 +175,37 @@ App.prototype = {
 
         model.predict(processedImg).data()
         .then(prediction => {
-          const confidence = Math.max(...prediction)
-          const index = prediction.indexOf(confidence)
-          document.getElementById(name).innerHTML = classifers[index]
+
+          let classes = {}
+
+          prediction.forEach((predict, i) => {
+            // Split the label for filtering
+            const [
+              classifier,
+              cat
+            ] = classifers[i].split("_")
+
+            if (!classes[classifier]) {
+              classes[classifier] = {
+                category: [cat],
+                values: [predict]
+              }
+            } else {
+              const categories = classes[classifier]
+              categories.category.push(cat)
+              categories.values.push(predict)
+            }
+          })
+
+          for (let className in classes) {
+            if (classes.hasOwnProperty(className)) {
+              const predictions = classes[className]
+              const confidence = Math.max(...predictions.values)
+              const idx = predictions.values.indexOf(confidence)
+              const prediction = predictions.category[idx]
+              document.getElementById(className).innerHTML = prediction
+            }
+          }
         })
         .catch(err => console.error('prediction error ::', err))
       })
