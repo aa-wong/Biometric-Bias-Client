@@ -8,10 +8,31 @@
     <script src="/js/tracking-min.js"></script>
     <script src="/data/face-min.js"></script>
     <script src="/js/main.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i" rel="stylesheet">
 </head>
 
 <body>
-    <div class="row_top"><h1>BIOMTERIC BIAS</h1></div>
+    <div class="row_top"><p><button id="myBtn" class="btn logo"></button></p></div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="bold">Biometric Bias aims to question our increasing reliance on machine-based decision making by demonstrating the consequences of Artificial Intelligence (AI) when developed with inherent bias.</p>
+            <p>Many of us interact with AI each day, whether it’s Google Assistant, Siri, Alexa, or the countless other AI-enabled smart devices finding their way into our hands, homes, and urban environments. As we transfer more and more authority from human intelligence to artificial intelligence, the implications of AI built on biased data-sets (whether conscious or unconscious) can be hugely consequential.</p>
+            <p>Using machine-learning algorithms, Biometric Bias has been developed and trained on the The Chicago Face Database; a free research data-set consisting of 158 photographs of males and females between the ages of 18 and 40. A diverse group of 1087 participants were then asked to subjectively rate the photographs to indicate how threatening, attractive, trustworthy, happy, and depressed the people in the photographs looked. Extensive facial measurements and physical properties of the photos were then analyzed for correlating data between physical appearance and participant bias.</p>
+            <p class="bold spc-above">How to use Biometric Bias</p>
+            <ol>
+                <li>Sit in front of your screen with a neutral facial expression (if using a desktop computer ensure your webcam is working)</li>
+                <li>Tap or click the “take photo” button once at the bottom of the screen</li>
+                <li>The Biometric Bias AI will analyze the measurements of your face and then make assumptions about you based on the measurement and perception data of similar faces from the machine-learning data-set</li>
+            </ol>
+            <p>Measurements taken include face luminance, face length, face width at cheeks, face width at mouth, face shape, nose shape, lip fullness, eye shape, eye size, upper head length, mid-face length, chin length, forehead height, cheekbone height, cheekbone prominence, and face width to height ratio.</p>
+            <p class="bold spc-above">Privacy</p>
+            <p>Photos and associative data is not shared or stored. The machine-learning algorithm used to train Biometric Bias is non-recursive and for prediction purposes only.</p>
+            <p class="bold spc-above">Contact</p>
+            <p>info@biometricbias.com</p>
+        </div>
+    </div>
 
     <div class="row_middle">
         <div class="column_middle">
@@ -41,7 +62,7 @@
         </div>
     </div>
 
-    <div class="row_bottom"><p><button class="btn"></button></p></div>
+    <div class="row_bottom"><p><button class="btn photo"></button></p></div>
 
 
     <script>
@@ -50,6 +71,29 @@
         app.init()
       }
     </script>
+
+
+    <script>
+    // Information Modal
+      var modal = document.getElementById('myModal');
+      var btn = document.getElementById("myBtn");
+      var span = document.getElementsByClassName("close")[0];
+
+      btn.onclick = function() {
+        modal.style.display = "block";
+      }
+
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    </script>
+
 </body>
 
 </html>
