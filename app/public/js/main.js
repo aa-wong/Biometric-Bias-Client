@@ -5,6 +5,7 @@ function App(http) {
   this.padding = 0
   this.clip = false
   this.imageResolution = [300, 300]
+  this.present = false
   this.modelNames = [
     'multi-class',
   ]
@@ -17,6 +18,7 @@ App.prototype = {
    */
   init: function(http) {
     this.showCameraIcon()
+    this.clearValues()
     this.http = http
     this.loadModels()
     .then(models => {
@@ -61,8 +63,10 @@ App.prototype = {
     tracking.track('#video', tracker, { camera: true })
     tracker.on('track', (event) => {
       // Reset canvas frame
+      this.present = false
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       event.data.forEach(rect => {
+        this.present = true
         const { x, y, width, height } = rect
         this.drawFrame({
           x: x - (padding / 2),
@@ -86,11 +90,24 @@ App.prototype = {
     ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
     ctx.font = '11px Helvetica'
     ctx.fillStyle = "#fff"
-    ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11)
-    ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
+    // ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11)
+    // ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22)
   },
 
   execute: function() {
+    if (this.clip) {
+      this.showCameraIcon()
+      this.clearValues()
+      this.video.play()
+    } else if (!this.clip && this.present) {
+      this.showCancelIcon()
+      this.video.pause()
+      this.processImageWithRect()
+    }
+    this.clip = !this.clip
+  },
+
+  clearValues: function() {
     const frameIds = [
       "attractive",
       "gender",
@@ -99,18 +116,7 @@ App.prototype = {
       "threatening",
       "trustworthy"
     ]
-
-
-    if (this.clip) {
-      this.showCameraIcon()
-      frameIds.forEach(f => document.getElementById(f).innerHTML = "")
-      this.video.play()
-    } else {
-      this.showCancelIcon()
-      this.video.pause()
-      this.processImageWithRect()
-    }
-    this.clip = !this.clip
+    frameIds.forEach(f => document.getElementById(f).innerHTML = "")
   },
 
   showCancelIcon: function() {
@@ -132,11 +138,7 @@ App.prototype = {
       <clipPath id="SVGID_2_">
         <use xlink:href="#SVGID_1_"  overflow="visible"/>
       </clipPath>
-      <g transform="matrix(1 0 0 1 0 0)" clip-path="url(#SVGID_2_)">
-
-          <image overflow="visible" width="2943" height="2618" xlink:href="insp/tallahasse-passport-photo-image30.jpeg"  transform="matrix(0.3208 0 0 0.3208 -4518.7188 -599.1865)">
-        </image>
-      </g>
+      <g transform="matrix(1 0 0 1 0 0)" clip-path="url(#SVGID_2_)"></g>
     </g>
     <rect x="-4397.715" y="-597.308" fill="#E6E6E6" width="701" height="524"/>
     <g>
@@ -147,11 +149,7 @@ App.prototype = {
       <clipPath id="SVGID_4_">
         <use xlink:href="#SVGID_3_"  overflow="visible"/>
       </clipPath>
-      <g transform="matrix(1 0 0 1 -2.441406e-004 0)" clip-path="url(#SVGID_4_)">
-
-          <image overflow="visible" width="2943" height="2618" xlink:href="insp/tallahasse-passport-photo-image30.jpeg"  transform="matrix(0.3208 0 0 0.3208 -3350.7188 -599.1865)">
-        </image>
-      </g>
+      <g transform="matrix(1 0 0 1 -2.441406e-004 0)" clip-path="url(#SVGID_4_)"></g>
     </g>
     <rect x="-3229.715" y="-597.308" fill="#E6E6E6" width="701" height="524"/>
     <g>
@@ -162,11 +160,7 @@ App.prototype = {
       <clipPath id="SVGID_6_">
         <use xlink:href="#SVGID_5_"  overflow="visible"/>
       </clipPath>
-      <g transform="matrix(1 0 0 1 0 0)" clip-path="url(#SVGID_6_)">
-
-          <image overflow="visible" width="2943" height="2618" xlink:href="insp/tallahasse-passport-photo-image30.jpeg"  transform="matrix(0.3208 0 0 0.3208 -2182.7188 -599.1865)">
-        </image>
-      </g>
+      <g transform="matrix(1 0 0 1 0 0)" clip-path="url(#SVGID_6_)"></g>
     </g>
     <rect x="-2061.715" y="-597.308" fill="#E6E6E6" width="701" height="524"/>
     <g>
@@ -178,9 +172,6 @@ App.prototype = {
         <use xlink:href="#SVGID_7_"  overflow="visible"/>
       </clipPath>
       <g transform="matrix(1 0 0 1 -6.103516e-005 0)" clip-path="url(#SVGID_8_)">
-
-          <image overflow="visible" width="2943" height="2618" xlink:href="insp/tallahasse-passport-photo-image30.jpeg"  transform="matrix(0.3208 0 0 0.3208 -1014.7188 -599.1865)">
-        </image>
       </g>
     </g>
     <rect x="-893.715" y="-597.308" fill="#E6E6E6" width="701" height="524"/>
@@ -193,9 +184,6 @@ App.prototype = {
         <use xlink:href="#SVGID_9_"  overflow="visible"/>
       </clipPath>
       <g transform="matrix(1 0 0 1 0 0)" clip-path="url(#SVGID_10_)">
-
-          <image overflow="visible" width="2943" height="2618" xlink:href="insp/tallahasse-passport-photo-image30.jpeg"  transform="matrix(0.3208 0 0 0.3208 153.2813 -599.1865)">
-        </image>
       </g>
     </g>
     <rect x="274.285" y="-597.308" fill="#E6E6E6" width="701" height="524"/>
