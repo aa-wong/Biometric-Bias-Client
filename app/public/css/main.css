@@ -50,17 +50,22 @@ body {
 
 /* ----- PAGE ELEMENTS ----- */
 
-video, canvas {
+video, canvas, #snap {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
+/* video {
+  width: 100%;
+  display: block;
+} */
+
 .btn {
   border: none;
   cursor: pointer;
-  background-image: url(/images/btn-camera.svg);
+  /* background-image: url(/images/btn-camera.svg); */
   /*background-image: url(/images/btn-close.svg);*/
   height: 100px;
   width: 100px;
