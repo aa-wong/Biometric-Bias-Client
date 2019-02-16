@@ -8,6 +8,8 @@ body {
   flex-direction: column;
   margin: 0;
   text-align: center;
+  font-family: 'Space Mono', monospace;
+  background-color: #fefefe;
 }
 
 
@@ -60,12 +62,6 @@ video, canvas {
 .btn {
   border: none;
   cursor: pointer;
-  background-image: url(/images/btn-camera.svg);
-  /*background-image: url(/images/btn-close.svg);*/
-  height: 100px;
-  width: 100px;
-  background-position: center;
-  background-repeat: no-repeat;
   background-color: unset;
   opacity: 1;
   transition: opacity .25s ease-in-out;
@@ -77,12 +73,28 @@ video, canvas {
   opacity: 0.5;
 }
 
+.photo {
+  background-image: url(/images/btn-camera.svg);
+  /*background-image: url(/images/btn-close.svg);*/
+  height: 100px;
+  width: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.logo {
+  background-image: url(/images/btn-logo.svg);
+  height: 85px;
+  width: 145px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 
 
 /* ----- TYPOGRAPHY ----- */
 
 h1, h2, p.data {
-  font-family: sans-serif;
   margin: 0;
   padding: 0;
   line-height: 1;
@@ -99,10 +111,54 @@ h2 {
 }
 
 p.data {
-  font-size: 2.5em;
+  font-size: 2.3em;
   margin-bottom: 1.5em;
 }
 
 p.data > sup {
   font-size: 0.5em;
+}
+
+p.bold {
+  font-weight: 700;
+}
+
+p.spc-above {
+  margin-top: 2.5em;
+}
+
+
+/* ----- Information Modal ----- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  background-color: #fefefe;
+  text-align: left;
+}
+
+.modal-content {
+  margin: auto;
+  padding: 75px 100px;
+  width: 100%;
+}
+
+.close {
+  color: #000;
+  float: right;
+  font-size: 6em;
+  margin-top: -90px;
+  margin-right: -60px;
+  margin-left: 50px;
+}
+
+.close:hover, .close:focus {
+  opacity: 0.5;
+  text-decoration: none;
+  cursor: pointer;
 }
