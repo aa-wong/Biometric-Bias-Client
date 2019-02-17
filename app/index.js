@@ -9,6 +9,7 @@ app.use('/css', express.static(__dirname + '/public/css'))
 app.use('/data', express.static(__dirname + '/public/data'))
 app.use('/js', express.static(__dirname + '/public/js'))
 app.use('/images', express.static(__dirname + '/public/images'))
+app.use('/models', express.static(__dirname + '/public/models'))
 app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/public/index.html')))
 
 module.exports = app

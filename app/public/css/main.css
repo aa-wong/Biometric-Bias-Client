@@ -52,16 +52,22 @@ body {
 
 /* ----- PAGE ELEMENTS ----- */
 
-video, canvas {
+video, canvas, #snap {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 55%;
   transform: translate(-50%, -50%);
 }
 
 .btn {
   border: none;
   cursor: pointer;
+  /* background-image: url(/images/btn-camera.svg); */
+  /*background-image: url(/images/btn-close.svg);*/
+  height: 100px;
+  width: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
   background-color: unset;
   opacity: 1;
   transition: opacity .25s ease-in-out;
@@ -71,6 +77,10 @@ video, canvas {
 
 .btn:hover {
   opacity: 0.5;
+}
+
+.btn:focus {
+  outline: none;
 }
 
 .photo {
