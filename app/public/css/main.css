@@ -55,14 +55,9 @@ body {
 video, canvas, #snap {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 55%;
   transform: translate(-50%, -50%);
 }
-
-/* video {
-  width: 100%;
-  display: block;
-} */
 
 .btn {
   border: none;
@@ -78,11 +73,14 @@ video, canvas, #snap {
   transition: opacity .25s ease-in-out;
    -moz-transition: opacity .25s ease-in-out;
    -webkit-transition: opacity .25s ease-in-out;
-   opacity: 0.5;
 }
 
 .btn:hover {
-  opacity: 1;
+  opacity: 0.5;
+}
+
+.btn:focus {
+  outline: none;
 }
 
 .photo {

@@ -14,7 +14,9 @@
 </head>
 
 <body>
-    <div class="row_top"><p><button id="myBtn" class="btn logo"></button></p></div>
+    <div class="row_top">
+      <p><button id="myBtn" class="btn logo"></button></p>
+    </div>
 
     <div id="myModal" class="modal">
         <div class="modal-content">
@@ -38,6 +40,7 @@
 
     <div class="row_middle">
         <div class="column_middle">
+          <p>Snap a photo when you see the purple frame.</p>
           <video id="video" width="600" height="600" preload autoplay loop muted></video>
           <canvas id="canvas" width="600" height="600"></canvas>
         </div>
@@ -81,6 +84,7 @@
             video: true
           })
           .then(stream => {
+            if (isMobileDevice()) applyVideoControls()
             const app = window.app = new App()
             const http = window.http = new Http()
             app.init(http)
@@ -88,35 +92,43 @@
           .catch(e => {
             if (e.name == 'NotAllowedError' || e.name == 'PermissionDismissedError') {
               alert('biometricbias.com requires access to your camera in order function. \nThis site does not store or send any information over the internet to ensure user privacy. \nAllow camera access to biometricbias.com for this browser and refresh the page to continue.')
-            } else if (e.name == 'NotFoundError') {
-              alert('Camera is not supported on this browser')
-            } else if (e.name == 'NotReadableError') {
-              alert('Camera is not supported on device')
-            }
-            console.error('onLoad Error ::', e)
+            } else if (e.name == 'NotFoundError') alert('Camera is not supported on this browser')
+            else if (e.name == 'NotReadableError') alert('Camera is not supported on device')
           })
-        } else {
-          alert('Camera is not supported on this browser')
-        }
+        } else alert('Camera is not supported on this browser')
       }
 
       function execute() {
         if (hasGetUserMedia()) {
           const app = window.app
           app.execute()
-        } else {
-          alert('Camera is not supported on this browser')
-        }
+        } else alert('Camera is not supported on this browser')
       }
 
       function hasGetUserMedia() {
         return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
       }
 
+      function isMobileDevice() {
+        return (navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)) ? true : false
+        // || navigator.userAgent.match(/Android/i)
+        // || navigator.userAgent.match(/webOS/i)
+        // || navigator.userAgent.match(/BlackBerry/i)
+        // || navigator.userAgent.match(/Windows Phone/i))
+      }
+
+      function applyVideoControls() {
+        const video = document.getElementsByTagName("video")[0]
+        video.setAttribute("playsinline", true)
+        video.setAttribute("controls", true)
+      }
+
     // Information Modal
-      var modal = document.getElementById('myModal')
-      var btn = document.getElementById("myBtn")
-      var span = document.getElementsByClassName("close")[0]
+      const modal = document.getElementById('myModal')
+      const btn = document.getElementById("myBtn")
+      const span = document.getElementsByClassName("close")[0]
 
       btn.onclick = function() {
         modal.style.display = "block"
