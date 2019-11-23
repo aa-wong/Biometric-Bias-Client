@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  background-color: #fefefe;
+}
+
+
+
+/* ----- FLEXBOX RESPONSIVE STRUCTURE ----- */
+
+.row_middle {
+  display: flex;
+  flex: 1;
+}
+
+.row_middle > .column_middle {
+  flex: 1;
+}
+
+.row_middle > div.column_left, .row_middle > div.column_right {
+  flex: 0 0 20vw;
+}
+
+.row_middle > div.column_left {
+  order: -1;
+}
+
+.row_top, .row_bottom {
+  height: 15vh;
+  display: flex;
+}
+
+.row_top, .row_bottom, .column_middle, .column_left, .column_right {
+  padding: 1em;
+}
+
+.row_top, .row_bottom, .column_left, .column_right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+/* ----- PAGE ELEMENTS ----- */
+
+video, canvas, #snap {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  /* background-image: url(/images/btn-camera.svg); */
+  /*background-image: url(/images/btn-close.svg);*/
+  height: 100px;
+  width: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: unset;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+
+.btn:hover {
+  opacity: 0.5;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.photo {
+  background-image: url(/images/btn-camera.svg);
+  /*background-image: url(/images/btn-close.svg);*/
+  height: 100px;
+  width: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.logo {
+  background-image: url(/images/btn-logo.svg);
+  height: 85px;
+  width: 145px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+
+/* ----- TYPOGRAPHY ----- */
+
+h1, h2, p.data {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+h1 {
+  font-size: 1.2em;
+}
+
+h2 {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+p.data {
+  font-size: 2.3em;
+  margin-bottom: 1.5em;
+}
+
+p.data > sup {
+  font-size: 0.5em;
+}
+
+p.bold {
+  font-weight: 700;
+}
+
+p.spc-above {
+  margin-top: 2.5em;
+}
+
+
+/* ----- Information Modal ----- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  background-color: #fefefe;
+  text-align: left;
+}
+
+.modal-content {
+  margin: auto;
+  padding: 75px 100px;
+  width: 100%;
+}
+
+.close {
+  color: #000;
+  float: right;
+  font-size: 6em;
+  margin-top: -90px;
+  margin-right: -60px;
+  margin-left: 50px;
+}
+
+.close:hover, .close:focus {
+  opacity: 0.5;
+  text-decoration: none;
+  cursor: pointer;
+}

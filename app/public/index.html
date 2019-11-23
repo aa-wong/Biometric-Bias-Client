@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Biometric Bias</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.2/dist/tf.min.js"></script>
+  <script src="/js/tracking-min.js"></script>
+  <script src="/data/face-min.js"></script>
+  <script src="/js/http.js"></script>
+  <script src="/js/main.js"></script>
+</head>
+
+<body>
+    <div class="row_top">
+      <p><button id="myBtn" class="btn logo"></button></p>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times</span>
+            <p class="bold">Biometric Bias aims to question our increasing reliance on machine-based decision making by demonstrating the consequences of Artificial Intelligence (AI) when developed with inherent bias.</p>
+            <p>Many of us interact with AI each day, whether it’s Google Assistant, Siri, Alexa, or the countless other AI-enabled smart devices finding their way into our hands, homes, and urban environments. As we transfer more and more authority from human intelligence to artificial intelligence, the implications of AI built on biased data-sets (whether conscious or unconscious) can be hugely consequential.</p>
+            <p>Using machine-learning algorithms, Biometric Bias has been developed and trained on the The Chicago Face Database a free research data-set consisting of 158 photographs of males and females between the ages of 18 and 40. A diverse group of 1087 participants were then asked to subjectively rate the photographs to indicate how threatening, attractive, trustworthy, happy, and depressed the people in the photographs looked. Extensive facial measurements and physical properties of the photos were then analyzed for correlating data between physical appearance and participant bias.</p>
+            <p class="bold spc-above">How to use Biometric Bias</p>
+            <ol>
+                <li>Sit in front of your screen with a neutral facial expression (if using a desktop computer ensure your webcam is working)</li>
+                <li>Tap or click the “take photo” button once at the bottom of the screen</li>
+                <li>The Biometric Bias AI will analyze the measurements of your face and then make assumptions about you based on the measurement and perception data of similar faces from the machine-learning data-set</li>
+            </ol>
+            <p>Measurements taken include face luminance, face length, face width at cheeks, face width at mouth, face shape, nose shape, lip fullness, eye shape, eye size, upper head length, mid-face length, chin length, forehead height, cheekbone height, cheekbone prominence, and face width to height ratio.</p>
+            <p class="bold spc-above">Privacy</p>
+            <p>Photos and associative data is not shared or stored. The machine-learning algorithm used to train Biometric Bias is non-recursive and for prediction purposes only.</p>
+            <p class="bold spc-above">Contact</p>
+            <p>info@biometricbias.com</p>
+        </div>
+    </div>
+
+    <div class="row_middle">
+        <div class="column_middle">
+          <p>Snap a photo when you see the purple frame.</p>
+          <video id="video" width="600" height="600" preload autoplay loop muted></video>
+          <canvas id="canvas" width="600" height="600"></canvas>
+        </div>
+        <div class="column_left">
+            <h2>GENDER</h2>
+            <p class="data" id="gender">M/F</p>
+
+            <h2>ATTRACTIVE</h2>
+            <p class="data" id="attractive">
+              00.0<sup>%</sup>
+            </p>
+
+            <h2>HAPPY</h2>
+            <p class="data" id="happy">
+              00.0<sup>%</sup>
+            </p>
+        </div>
+
+        <div class="column_right">
+            <h2>TRUSTWORTHY</h2>
+            <p class="data" id="trustworthy">
+              00.0<sup>%</sup>
+            </p>
+
+            <h2>THREATENING</h2>
+            <p class="data" id="threatening">
+              00.0<sup>%</sup>
+            </p>
+
+            <h2>DEPRESSED</h2>
+            <p class="data" id="sad">00.0<sup>%</sup></p>
+        </div>
+    </div>
+
+    <div class="row_bottom"><p><button class="btn" id="button" onclick="execute()"></button></p></div>
+
+    <script>
+      window.onload = () => {
+        if (hasGetUserMedia()) {
+          navigator.mediaDevices.getUserMedia({
+            video: true
+          })
+          .then(stream => {
+            if (isMobileDevice()) applyVideoControls()
+            const app = window.app = new App()
+            const http = window.http = new Http()
+            app.init(http)
+          })
+          .catch(e => {
+            if (e.name == 'NotAllowedError' || e.name == 'PermissionDismissedError') {
+              alert('biometricbias.com requires access to your camera in order function. \nThis site does not store or send any information over the internet to ensure user privacy. \nAllow camera access to biometricbias.com for this browser and refresh the page to continue.')
+            } else if (e.name == 'NotFoundError') alert('Camera is not supported on this browser')
+            else if (e.name == 'NotReadableError') alert('Camera is not supported on device')
+          })
+        } else alert('Camera is not supported on this browser')
+      }
+
+      function execute() {
+        if (hasGetUserMedia()) {
+          const app = window.app
+          app.execute()
+        } else alert('Camera is not supported on this browser')
+      }
+
+      function hasGetUserMedia() {
+        return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+      }
+
+      function isMobileDevice() {
+        return (navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)) ? true : false
+        // || navigator.userAgent.match(/Android/i)
+        // || navigator.userAgent.match(/webOS/i)
+        // || navigator.userAgent.match(/BlackBerry/i)
+        // || navigator.userAgent.match(/Windows Phone/i))
+      }
+
+      function applyVideoControls() {
+        const video = document.getElementsByTagName("video")[0]
+        video.setAttribute("playsinline", true)
+        video.setAttribute("controls", true)
+      }
+
+    // Information Modal
+      const modal = document.getElementById('myModal')
+      const btn = document.getElementById("myBtn")
+      const span = document.getElementsByClassName("close")[0]
+
+      btn.onclick = function() {
+        modal.style.display = "block"
+      }
+
+      span.onclick = function() {
+        modal.style.display = "none"
+      }
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none"
+        }
+      }
+    </script>
+
+</body>
+
+</html>
