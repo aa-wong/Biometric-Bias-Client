@@ -13,6 +13,9 @@ Server runs on port 3000,
 
 http://localhost:3000
 
+# Live demo
+https://biometricbias.com/
+
 # Folder Structure
 ```bash
 app
